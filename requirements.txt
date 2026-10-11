@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+websockets
+qrcode
+librosa>=0.10.2
+numpy
+sounddevice
+soundfile
+matplotlib
+scipy
