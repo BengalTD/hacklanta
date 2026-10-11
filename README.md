@@ -23,6 +23,14 @@ python app.py
 
 For PowerShell, set `$env:GEMINI_API_KEY = "your-rotated-key"` before starting `app.py` or `run_server.bat`.
 
+## Deploy on Vercel
+
+The root `app.py` is the Vercel entrypoint for the FastAPI app. `vercel.json` keeps the song and browser assets in the function bundle, and `requirements.txt` contains only the web server dependencies so Vercel does not install the offline audio-analysis stack.
+
+To try a deployment, import `BengalTD/hacklanta` from GitHub in Vercel. Keep the project root set to the repository root, use the detected FastAPI framework, and add `GEMINI_API_KEY` in Project Settings → Environment Variables for the environments you want to test. The local `.env` file is ignored by Git and is not deployed. Deploy after saving the variable.
+
+The main host page pairs phones directly with PeerJS/WebRTC over the HTTPS Vercel domain, and the Gemini recap uses the server endpoint. Vercel's Python WebSocket support is in beta and connections are limited by function duration; the separate `/phone` room engine also keeps room state in memory, so that legacy WebSocket mode is not reliable across multiple function instances or reconnects. The main PeerJS host flow does not use that room engine.
+
 ## Public Hosting on Render
 
 This project is configured for Render as a Python web service. Push the project to a Git provider, create a Render Blueprint from the repository, and Render will read [`render.yaml`](render.yaml). Enter `GEMINI_API_KEY` in Render when prompted, or add it in the service's Environment settings. Do not upload or commit `.env`.
@@ -50,5 +58,6 @@ It serves the root `index.html` and `style.css`, uses PeerJS/WebRTC for phone-to
 ## Other Files
 
 - `songs/`: Shared song catalog and audio/reference assets used by the standalone player.
-- `requirements.txt`: Runtime dependencies for the FastAPI arena and audio pipeline.
+- `requirements.txt`: Lightweight runtime dependencies for the FastAPI web app and Vercel.
+- `song_pipeline_v5/requirements.txt`: Dependencies for offline audio and song analysis.
 - `pitch_battle/run_server.bat`: Windows launcher for the current arena.

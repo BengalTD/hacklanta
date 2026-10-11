@@ -28,14 +28,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-from scorer import SongScorer, PlayerScoreTracker
-from gemini_commentary import (
-    MAX_REQUEST_BYTES,
-    CommentaryError,
-    CommentaryRateLimit,
-    MissingGeminiKey,
-    generate_round_commentary,
-)
+if __package__:
+    from .scorer import SongScorer, PlayerScoreTracker
+    from .gemini_commentary import (
+        MAX_REQUEST_BYTES,
+        CommentaryError,
+        CommentaryRateLimit,
+        MissingGeminiKey,
+        generate_round_commentary,
+    )
+else:
+    from scorer import SongScorer, PlayerScoreTracker
+    from gemini_commentary import (
+        MAX_REQUEST_BYTES,
+        CommentaryError,
+        CommentaryRateLimit,
+        MissingGeminiKey,
+        generate_round_commentary,
+    )
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 SONGS_DIR = BASE_DIR / "songs"
@@ -90,8 +100,8 @@ async def start_ngrok_tunnel():
 
     # Cloud hosts provide HTTPS and a public hostname directly; ngrok is only
     # useful for the local desktop launcher.
-    if os.environ.get("RENDER"):
-        print("[PITCH BATTLE] Running on Render; using its public HTTPS URL.")
+    if os.environ.get("RENDER") or os.environ.get("VERCEL"):
+        print("[PITCH BATTLE] Running on a hosted HTTPS platform; using its public URL.")
         return
 
     PUBLIC_TUNNEL_URL = _ngrok_tunnel_url()
