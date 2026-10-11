@@ -1,9 +1,18 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "app.py": {
-      "maxDuration": 300,
-      "includeFiles": "{pitch_battle/static/**,pitch_battle/songs/**,songs/**}"
+  "services": {
+    "musiggle-karaoke": {
+      "root": ".",
+      "entrypoint": "app:app",
+      "buildCommand": "pip install -r requirements.txt"
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "musiggle-karaoke"
+      }
+    }
+  ]
 }

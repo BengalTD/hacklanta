@@ -25,7 +25,7 @@ For PowerShell, set `$env:GEMINI_API_KEY = "your-rotated-key"` before starting `
 
 ## Deploy on Vercel
 
-The root `app.py` is the Vercel entrypoint for the FastAPI app. `vercel.json` keeps the song and browser assets in the function bundle, and `requirements.txt` contains only the web server dependencies so Vercel does not install the offline audio-analysis stack.
+The root `app.py` is the Vercel entrypoint for the FastAPI app. Vercel detects the FastAPI framework and its mounted static assets automatically. `requirements.txt` contains only web server dependencies so Vercel does not install the offline audio-analysis stack.
 
 To try a deployment, import `BengalTD/hacklanta` from GitHub in Vercel. Keep the project root set to the repository root, use the detected FastAPI framework, and add `GEMINI_API_KEY` in Project Settings → Environment Variables for the environments you want to test. The local `.env` file is ignored by Git and is not deployed. Deploy after saving the variable.
 
